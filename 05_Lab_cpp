@@ -1,0 +1,132 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int main() {
+   
+   const double MIN_CHANGE = 0.1;
+   const int NUM_ELEMENTS = 20;
+   double arrayXY[NUM_ELEMENTS][NUM_ELEMENTS];
+   double arrayXY2[NUM_ELEMENTS][NUM_ELEMENTS];
+   
+   cout << "Hotplate simulator" << endl;
+   cout << endl;
+   cout << "Printing initial plate..." << endl;
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // initiate first array
+      for (int j = 0; j < NUM_ELEMENTS; j++) {
+         if (((i == 0) || (i == NUM_ELEMENTS - 1)) && (j > 0) && (j < NUM_ELEMENTS - 1)) {
+            arrayXY[i][j] = 100.0;
+         }
+         else {
+            arrayXY[i][j] = 0.0;
+         }
+      }
+   }
+ 
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // print first array
+      for (int j = 0; j < NUM_ELEMENTS - 1; j++) { 
+         cout << fixed << setprecision(4) << setw(10) << right << arrayXY[i][j] << ",";
+      }
+   cout <<  fixed << setprecision(4) << setw(10) << right << arrayXY[i][NUM_ELEMENTS - 1];
+   cout << endl;
+   }
+   
+   cout << endl;
+   cout << "Printing plate after one iteration..." << endl;
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // initiate new array
+      for (int j = 0; j < NUM_ELEMENTS; j++) {
+         if (((i == 0) || (i == NUM_ELEMENTS - 1)) && (j > 0) && (j < NUM_ELEMENTS - 1)) {
+            arrayXY2[i][j] = 100.0;
+         }
+         else {
+            arrayXY2[i][j] = 0.0;
+         }
+      }
+   }
+   
+   for (int i = 1; i < NUM_ELEMENTS - 1; i++) { // averages on new array
+      for (int j = 1; j < NUM_ELEMENTS - 1; j++) {
+         arrayXY2[i][j] = (arrayXY[i - 1][j] + arrayXY[i + 1][j] + arrayXY[i][j - 1] + arrayXY[i][j + 1])/4;
+      }
+   }
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // print new array
+      for (int j = 0; j < NUM_ELEMENTS - 1; j++) { 
+         cout << fixed << setprecision(4) << setw(10) << right << arrayXY2[i][j] << ",";
+      }
+   cout <<  fixed << setprecision(4) << setw(10) << right << arrayXY2[i][NUM_ELEMENTS - 1];
+   cout << endl;
+   }
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // apply new array to old array
+      for (int j = 0; j < NUM_ELEMENTS; j++) {
+         arrayXY[i][j] = arrayXY2[i][j];
+      }
+   }
+   
+   double largestChange = 0;
+   
+   do {
+      largestChange = 0;
+      for (int i = 1; i < NUM_ELEMENTS - 1; i++) {
+         for (int j = 1; j < NUM_ELEMENTS - 1; j++) {
+            arrayXY2[i][j] = (arrayXY[i - 1][j] + arrayXY[i + 1][j] + arrayXY[i][j - 1] + arrayXY[i][j + 1])/4;
+       
+            double tempChange = fabs(arrayXY[i][j] - arrayXY2[i][j]);
+            if (tempChange > largestChange) {
+               largestChange = tempChange;
+            }
+         }
+      }
+      for (int i = 0; i < NUM_ELEMENTS; i++) { // apply new array to old array
+      for (int j = 0; j < NUM_ELEMENTS; j++) {
+         arrayXY[i][j] = arrayXY2[i][j];
+      }
+   }
+      
+   } while (largestChange > MIN_CHANGE);
+   
+   cout << endl;
+   cout << "Printing final plate..." << endl;
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // print new array
+      for (int j = 0; j < NUM_ELEMENTS - 1; j++) { 
+         cout << fixed << setprecision(4) << setw(10) << right << arrayXY2[i][j] << ",";
+      }
+   cout <<  fixed << setprecision(4) << setw(10) << right << arrayXY2[i][NUM_ELEMENTS - 1];
+   cout << endl;
+   }
+   
+   cout << endl;
+   cout << "Printing final plate for excel..." << endl;
+   
+   for (int i = 0; i < NUM_ELEMENTS; i++) { // print new array
+      for (int j = 0; j < NUM_ELEMENTS - 1; j++) { 
+         cout << fixed << setprecision(4) << arrayXY2[i][j] << "\t";
+      }
+   cout <<  fixed << setprecision(4) << arrayXY2[i][NUM_ELEMENTS - 1];
+   cout << endl;
+   }
+   
+   /* 
+   double maxChangeValue = 1.0
+   while the max change value is > 0.1 
+   itterate
+   check for greatest change after/during itteration. store as maxChangeValue
+   
+   print final array as normal
+   
+   print final array using tabs rather than a set width. still use precision of 4. no commas
+   */
+   
+   
+   
+   
+   
+   
+	return 0;
+}
